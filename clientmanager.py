@@ -24,21 +24,24 @@ class clientmanager:
     def _savesession(self):
         self.client.dump_settings("axomicsession.json")
 
-    def login(self, username=None, password=None):
-        if not username:
-            username = input("\nlogin username: ").strip()
-        if not password:
-            password = input("login password: ").strip()
-        try:
-            self.client.login(username, password)
-            self.loggedin = True
-            self._savesession()
-            print("login successful. welcome", username)
-            return True
-        except Exception as e:
-            print("login failed:", str(e))
-            self.loggedin = False
-            return False
+def login(self, username=None, password=None, verification_code=None):
+    if not username:
+        username = input("\nlogin username: ").strip()
+    if not password:
+        password = input("login password: ").strip()
+    try:
+        self.client.login(username, password, verification_code=verification_code)
+        self.loggedin = True
+        self._savesession()
+        print("login successful. welcome", username)
+        return True
+    except Exception as e:
+        if "two_factor" in str(e).lower() or "challenge" in str(e).lower():
+            code = input("enter 2fa verification code from authenticator app or sms: ").strip()
+            return self.login(username, password, code)
+        print("login failed:", str(e))
+        self.loggedin = False
+        return False
 
     def ensurelogin(self):
         if self.loggedin:
