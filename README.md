@@ -203,4 +203,4 @@ star the repo
 
 if you find this tool useful, please star it on github
 
-`
+# [Our Discord](https://discord.gg/QAhCXgaDZg) 
